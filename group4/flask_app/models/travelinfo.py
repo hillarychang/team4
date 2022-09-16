@@ -13,7 +13,7 @@ import re	# the regex module
 
 class Travelinfo: # model the class after the user table from  database
     
-    db='travel' #database (in mySQL workbench)
+    db='travel_log' #database (in mySQL workbench)
 
     def __init__( self , data ):
         self.id = data['id']
