@@ -15,7 +15,7 @@ app.secret_key = "shhh"
 def create_travelinfo():
     
     if not Travelinfo.validate_log(request.form): #request.form  (check user.py)
-        return redirect('/create_tree') 
+        return redirect('/create_travelinfo') 
 
     
     data = {
@@ -32,12 +32,12 @@ def create_travelinfo():
 @app.route("/travelinfo") #runs add_post.html
 def post():
     
-    travelinfos = Travelinfo.get_all()
+    trips = Travelinfo.get_all()
     data = {"id":session['user_id']} 
 
     #ADDED
     user = User.get_user_with_logs(data) #returns a user with a list of posts
-    return render_template("add_travelinfo.html", all_travelinfos = travelinfos, users = user) 
+    return render_template("add_travelinfo.html", all_travelinfos = trips, users = user) 
 
 
 
@@ -61,9 +61,9 @@ def edit_post(id):
 
     data = {'id':id}
     travelinfos = Travelinfo.get_one(data)
-    user = User.get_user_with_logs({'id':travelinfos.user_id}) #returns a user with a list of logs
+    user = User.get_user_with_logs({'id':trips.user_id}) #returns a user with a list of logs
 
-    return render_template("edit_travelinfo.html", travelinfo = travelinfos, users  = user)
+    return render_template("edit_travelinfo.html", travelinfo = trips, users  = user)
 
 
 

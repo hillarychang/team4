@@ -26,27 +26,32 @@ class Travelinfo: # model the class after the user table from  database
 
     @classmethod
     def save(cls, data ):
-        query = "INSERT INTO travelinfo ( text , user_id, created_at , updated_at ) VALUES ( %(text)s , %(user_id)s , NOW() , NOW() );"
+        query = "INSERT INTO trips ( text , user_id, created_at , updated_at ) VALUES ( %(text)s , %(user_id)s , NOW() , NOW() );"
         result = connectToMySQL(cls.db).query_db( query, data )  # returns an ID because of insert statement
         return result
     
     @classmethod     # class method to remove one travel log from the database
     def delete(cls, data ):
-        query = "DELETE FROM travelinfo WHERE id=%(id)s;"
+        query = "DELETE FROM trips WHERE id=%(id)s;"
         return connectToMySQL(cls.db).query_db( query, data )
 
     @classmethod
     def get_all(cls):
 
         query = """
-        SELECT * FROM post 
-        LEFT JOIN user ON post.user_id = user.id
-        ORDER BY post.created_at DESC;
+        SELECT * FROM trips 
+        LEFT JOIN user ON trips.user_id = user.id;
         """
+
+        # ORDER BY trips.created_at DESC;
 
         results = connectToMySQL(cls.db).query_db(query)
 
-        travellogs = []      # Create an empty list to append instances of travel logs
+        if len(results)<1:
+            return
+
+
+        trips = []      # Create an empty list to append instances of travel logs
         
         for log in results: # Iterate over the db results and create instances of travel logs with cls.
             one_log = cls(log)
@@ -63,8 +68,8 @@ class Travelinfo: # model the class after the user table from  database
             }
 
             one_log.user = user.User(user_data)
-            travellogs.append(one_log)
-        return travellogs #returns list of class objects (list of dictionaries)
+            trips.append(one_log)
+        return trips #returns list of class objects (list of dictionaries)
 
 
 
