@@ -15,7 +15,7 @@ import re	# the regex module
 
 class User: # model the class after the user table from the database
     
-    db='travel' #database (in mySQL workbench)
+    db='travel_log' #database (in mySQL workbench)
 
     def __init__( self , data ):
         self.id = data['id']
@@ -26,7 +26,7 @@ class User: # model the class after the user table from the database
         self.created_at = data['created_at']
         self.updated_at = data['updated_at']
 
-        self.travelinfos=[] # one to many
+        self.trips=[] # one to many
 
 
 
@@ -34,24 +34,27 @@ class User: # model the class after the user table from the database
     def get_user_with_logs( cls , data ):
         query = """
         SELECT * FROM user 
-        LEFT JOIN travelinfo ON travelinfo.user_id = user.id 
+        LEFT JOIN trips ON trips.user_id = user.id 
         WHERE user.id = %(id)s;
         """
         results = connectToMySQL(cls.db).query_db( query , data )
         # results will be a list of user objects with the log attached to each row. 
+        
+        if len(results)<1:
+            return
 
         user = cls( results[0] )
         for row_from_db in results:
             # Now parse the post data to make instances of logs and add them into the list.
             log_data = {
-                "id" : row_from_db["travelinfo.id"],  #logs.__ because id overlaps with id in other tables
+                "id" : row_from_db["trips.id"],  #logs.__ because id overlaps with id in other tables
                 "text" : row_from_db["text"],
                 "user_id" : row_from_db['user_id'],
-                "created_at" : row_from_db["travelinfo.created_at"],
-                "updated_at" : row_from_db["travelinfo.updated_at"]
+                "created_at" : row_from_db["trips.created_at"],
+                "updated_at" : row_from_db["trips.updated_at"]
                 
             }
-            user.travelinfos.append( travelinfo.Travelinfo( log_data ) ) #call log class, then call Log constructor
+            user.trips.append( travelinfo.Travelinfo( log_data ) ) #call log class, then call Log constructor
         return user     #returns an object with a list of logs inside 
 
 
