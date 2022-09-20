@@ -22,6 +22,118 @@ class Travelinfo: # model the class after the user table from  database
         self.updated_at = data['updated_at']
         self.user_id = data['user_id']  # hidden input 
 
+        self.hotel = []
+
+        self.all_info = [] #can delete if don't use
+
+
+    # # METHOD 2: 
+    # @classmethod
+    # def get_travelinfo_with_allinfo( cls , data ):
+
+    #     print("id__",data)
+
+    #     query = """
+    #     SELECT * FROM trips 
+    #     LEFT JOIN hotels ON hotels.trips_id = trips.id 
+    #     LEFT JOIN cars ON cars.trips_id = trips.id 
+    #     LEFT JOIN flights ON flights.trips_id = trips.id 
+    #     WHERE trips.id = %(id)s
+    #     """
+
+    #     results = connectToMySQL(cls.db).query_db(query, data) #results returns a list of dictionaries (key is column, value is row in specific column)
+
+    #     travelinfo = cls( results[0] )
+        
+    #     for row_from_db in results:
+    #         # Now parse the post data to make instances of posts and add them into the list.
+    #         join_data = {
+    #             "trips_id" : row_from_db["trips.id"],  
+            
+    #         #hotel info
+    #             "hotels_id" : row_from_db["hotels.id"],  #hotels.__ because id overlaps with id in other tables
+    #             "cost" : row_from_db["hotels.cost"],
+    #             "check_in" : row_from_db['check_in'],
+    #             "check_out" : row_from_db['check_out'],
+    #             "name" : row_from_db['name'],
+
+    #         #car info
+    #             "cars_id" : row_from_db["cars.id"],  #hotels.__ because id overlaps with id in other tables
+    #             "company" : row_from_db["company"],
+    #             "total_days" : row_from_db['total_days'],
+    #             "cars_cost" : row_from_db['cars.cost'],
+    #             "start_date" : row_from_db['start_date'],
+    #             "end_date" : row_from_db['end_date'],
+
+    #         # flight info
+    #             "flights_id" : row_from_db["flights.id"],  #hotels.__ because id overlaps with id in other tables
+    #             "flight_number" : row_from_db["flight_number"],
+    #             "destination" : row_from_db['destination'],
+    #             "departure" : row_from_db['departure'],
+    #             "arrival" : row_from_db['arrival'],
+
+                
+    #         }
+
+    #         travelinfo.all_info.append( join_data ) #call hotel class, then call Hotel constructor
+    #     return travelinfo.all_info     #returns an object with a list of hotels inside 
+
+
+
+
+# METHOD 1: FIX THIS METHOD
+    @classmethod
+    def get_travelinfo_with_hotels( cls , data ):
+
+        print("id__",data)
+
+        query = """
+        SELECT * FROM trips 
+        LEFT JOIN hotels ON hotels.trips_id = trips.id 
+        WHERE trips.id = %(id)s
+        """
+
+        results = connectToMySQL(cls.db).query_db(query, data) #results returns a list of dictionaries (key is column, value is row in specific column)
+
+        travelinfo = cls( results[0] )
+        
+        for row_from_db in results:
+            # Now parse the post data to make instances of posts and add them into the list.
+            join_data = {
+                "hotels_id" : row_from_db["hotels_id"],  #hotels.__ because id overlaps with id in other tables
+                "trips_id" : row_from_db["trips.id"],  
+                "cost" : row_from_db["cost"],
+                "check_in" : row_from_db['check_in'],
+                "check_out" : row_from_db['check_out']
+                
+            }
+
+            travelinfo.hotel.append( join_data ) #call hotel class, then call Hotel constructor
+        return travelinfo.hotel     #returns an object with a list of hotels inside 
+
+
+
+
+    @classmethod
+    def saveHotel(cls, data ):
+        query = "INSERT INTO hotels ( name , trips_id, check_in, check_out, cost) VALUES ( %(name)s , %(trips_id)s , %(check_in)s, %(check_out)s,%(cost)s);"
+        result = connectToMySQL(cls.db).query_db( query, data )  # returns an ID because of insert statement
+        return result
+    
+    
+    @classmethod
+    def saveFlight(cls, data ):
+        query = "INSERT INTO flights ( flight_number , trips_id, destination, departure, arrival) VALUES ( %(flight_number)s , %(trips_id)s , %(destination)s, %(departure)s,%(arrival)s);"
+        result = connectToMySQL(cls.db).query_db( query, data )  # returns an ID because of insert statement
+        return result
+
+
+    @classmethod
+    def saveCar(cls, data ):
+        query = "INSERT INTO cars ( company , trips_id, total_days, cost, start_date, end_date) VALUES ( %(company)s , %(trips_id)s , %(total_days)s, %(cost)s, %(start_date)s, %(end_date)s);"
+        result = connectToMySQL(cls.db).query_db( query, data )  # returns an ID because of insert statement
+        return result
+
 
 
     @classmethod
@@ -47,8 +159,8 @@ class Travelinfo: # model the class after the user table from  database
 
         results = connectToMySQL(cls.db).query_db(query)
 
-        if len(results)<1:
-            return
+        # if len(results)<1:
+        #     return
 
 
         trips = []      # Create an empty list to append instances of travel logs
