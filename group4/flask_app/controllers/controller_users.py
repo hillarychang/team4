@@ -76,6 +76,11 @@ def showUser():
     user = User.get_user_with_logs(data) #user with a list of logs
 
 
+    for travelinfo in travelinfos:
+        hotel_info = Travelinfo.get_travelinfo_with_hotels({"id":travelinfo.id}) #should update hotels for each travelinfo
+        if (hotel_info[0]['cost'] != None):
+            travelinfo.hotels = hotel_info
+
     return render_template("result.html", all_travelinfos = travelinfos, users = user) 
 
 
