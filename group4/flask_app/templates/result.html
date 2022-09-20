@@ -21,39 +21,27 @@
     {% endif %}
     {% endwith %}
 
-    <h1>Logs</h1>
-    <h1>Welcome {{users.first_name}}</h1>
-    <!-- user is from controller_users.py -->
+    <h1>Select Travel Plan</h1>
     <div class= "links">    
-        <a href = "/log_out">Logout</a>
+        <a href = "/log_out">Logout</a><br>
+        <a href = "/travelinfo">travelinfo test this page</a>
+
+        
     </div>
 
 
 
 
 
-    <table>
-        <tr>
-            <th>Filler</th>
-            <th>Filler2</th>
-            <th>Filler3</th>
-            <th>Filler4</th>
-        </tr>
-
-        {% for one_travelinfo in all_travelinfos %}
-        <tr>
-            <td>{{one_travelinfo.text}}</td>
-            <td>Filler2</td> 
-            <td>Filler3</td>
-            <td>Actions:
-                <a href = "/edit/{{one_travelinfo.id}}">Edit</a>
-            </td>
+    {% for one_travelinfo in all_travelinfos %}
+        <p>{{one_travelinfo.text}}</p>
+        <p>Actions:</p>
+            <a href = "/edit/{{one_travelinfo.id}}">Edit</a>
+            <a href = "/delete/{{one_travelinfo.id}}">Delete</a>
             <hr>
-        </tr>    
-        {% endfor %}
+    {% endfor %}
 
 
-    </table>
 
 
 
