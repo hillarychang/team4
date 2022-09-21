@@ -4,21 +4,47 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link rel="stylesheet" href="/static/add_travelinfo.css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous">
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/menu.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/add_travelinfo.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/global.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" integrity="sha512-+4zCK9k+qNFUR5X+cKL9EIR+ZOhtIloNl9GIKS57V1MyNsYpYcUrUeQc9vNfzsWfV28IaLL3i96P9sdNyeRssA==" crossorigin="anonymous" referrerpolicy="no-referrer" />    
+
+    <title>Add Travel Info</title>
 
 </head>
 <body>
+<!-- header & navbar section -->
+<nav class="navbar">
+    {% block menu %}
+        {% include 'menu.html' %}
+    {%  endblock menu%}
+</nav>
 
-    {% with messages = get_flashed_messages() %}     <!-- declare a variable called messages -->
-    {% if messages %}                            <!-- check if there are any messages -->
-        {% for message in messages %}            <!-- loop through the messages -->
-            <p>{{message}}</p>                   <!-- display each message in a paragraph tag -->
-        {% endfor %}
-    {% endif %}
-    {% endwith %}
+<!-- header -->
+<header class = "flex">
+    <div class = "container">
+        <div class = "header-title">
+            <h1>Hello {{users.fname}}</h1>
+            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Natus rerum maxime enim odit illum in molestias beatae doloremque, ratione optio.</p>
+        </div>
+    </div>
+</header>
+<!-- header -->
 
+    <!-- login error flash message -->
+    <div class="flashContainer">
+        {% with messages = get_flashed_messages() %}     <!-- declare a variable called messages -->
+        {% if messages %}                            <!-- check if there are any messages -->
+            {% for message in messages %}            <!-- loop through the messages -->
+                <p>{{message}}</p>                   <!-- display each message in a paragraph tag -->
+            {% endfor %}
+        {% endif %}
+        {% endwith %}
+    </div>
+<!-- end of login error flash message -->
+
+<!-- Add new post Section -->
     <h1>Log your Travel</h1>
     <!-- user is from controller_users.py -->
     <div class= "links">    
@@ -102,6 +128,6 @@
 
 
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-A3rJD856KowSb7dwlZdYEkO39Gagi7vIsF0jrRAoQmDKKtQBHUuLZ9AsSv4jD4Xa" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/scripts.js')}}"></script>    
 </body>
 </html>

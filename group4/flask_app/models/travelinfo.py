@@ -101,7 +101,8 @@ class Travelinfo: # model the class after the user table from  database
             # Now parse the post data to make instances of posts and add them into the list.
             join_data = {
                 "hotels_id" : row_from_db["hotels_id"],  #hotels.__ because id overlaps with id in other tables
-                "trips_id" : row_from_db["trips.id"],  
+                "trips_id" : row_from_db["trips.id"],
+                "name":row_from_db["name"],
                 "cost" : row_from_db["cost"],
                 "check_in" : row_from_db['check_in'],
                 "check_out" : row_from_db['check_out']

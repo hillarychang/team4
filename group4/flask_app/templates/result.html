@@ -6,46 +6,79 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link rel="stylesheet" href="/static/result.css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous">
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/menu.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/result.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/global.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" integrity="sha512-+4zCK9k+qNFUR5X+cKL9EIR+ZOhtIloNl9GIKS57V1MyNsYpYcUrUeQc9vNfzsWfV28IaLL3i96P9sdNyeRssA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <title>All the Post</title>
 
 </head>
 <body>
+<!-- header & navbar section -->
+<nav class="navbar">
+    {% block menu %}
+        {% include 'menu.html' %}
+    {%  endblock menu%}
+</nav>
 
-    {% with messages = get_flashed_messages() %}     <!-- declare a variable called messages -->
-    {% if messages %}                            <!-- check if there are any messages -->
-        {% for message in messages %}            <!-- loop through the messages -->
-            <p>{{message}}</p>                   <!-- display each message in a paragraph tag -->
-        {% endfor %}
-    {% endif %}
-    {% endwith %}
-
-    <h1>Select Travel Plan</h1>
-    <div class= "links">    
-        <a href = "/log_out">Logout</a><br>
-        <a href = "/travelinfo">travelinfo test this page</a>
-
-        
+<!-- header -->
+<header class = "flex">
+    <div class = "container">
+        <div class = "header-title">
+            <h1>Hello {{users.first_name}}</h1>
+            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Natus rerum maxime enim odit illum in molestias beatae doloremque, ratione optio.</p>
+        </div>
     </div>
+</header>
+<!-- header -->
+
+    <!-- error flash message -->
+    <div class="flashContainer">
+        {% with messages = get_flashed_messages() %}     <!-- declare a variable called messages -->
+        {% if messages %}                            <!-- check if there are any messages -->
+            {% for message in messages %}            <!-- loop through the messages -->
+                <p>{{message}}</p>                   <!-- display each message in a paragraph tag -->
+            {% endfor %}
+        {% endif %}
+        {% endwith %}
+    </div>
+<!-- end of error flash message -->
 
 
+        <!--  Show All section -->
+        <section id = "blog" class = "py-4">
+            <div class = "container">
+                <div class = "title-wrap">
+                    <h2 class = "sm-title">Reading is dreaming with open eyes</h2>
+                    <h3 class = "lg-title">Recent blog</h3>
+                </div>
+                {% for one_travelinfo in all_travelinfos %}
+                <div class = "blog-row">
+                    <div class = "blog-item my-2 shadow">
+                        <div class = "blog-item-top">
+                            <span class = "blog-date">{{one_travelinfo.hotels.check_in.strftime('%m/%d/%Y')}}</span>
+                        </div>
+                        <div class = "blog-item-bottom">
+                            <span>travel | {{one_travelinfo.user.full_name()}}</span>
+                            <a href = "/travelinfo/{{one_travelinfo.id}}">{{one_travelinfo.hotels.name}}</a>
+                            <p>{{one_travelinfo.text}}</p>
+                            <div class="action-box">
+                                <a href = "/edit/{{one_travelinfo.id}}"><button type="button" class="edit-btn shadow">Edit</button></a>
+                                <form action="/delete/{{one_travelinfo.id}}" method="POST" class="delete-form">
+                                    <input name="id" type="hidden" >
+                                    <button class="delete-btn shadow">Delete</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </section>
+        <!-- end of Show All section -->
 
-
-
-    {% for one_travelinfo in all_travelinfos %}
-        <p>{{one_travelinfo.text}}</p>
-        <p>Actions:</p>
-            <a href = "/edit/{{one_travelinfo.id}}">Edit</a>
-            <a href = "/delete/{{one_travelinfo.id}}">Delete</a>
-            <hr>
-    {% endfor %}
-
-
-
-
-
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-A3rJD856KowSb7dwlZdYEkO39Gagi7vIsF0jrRAoQmDKKtQBHUuLZ9AsSv4jD4Xa" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/scripts.js')}}"></script>    
 </body>
 </html>

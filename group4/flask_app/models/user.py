@@ -1,6 +1,6 @@
 # import the function that will return an instance of a connection
 from flask_app.config.mysqlconnection import connectToMySQL
-# from flask import render_template, redirect, request, session, flash
+from flask import render_template, redirect, request, session, flash
 
 from flask_app.models import travelinfo
 
@@ -122,8 +122,6 @@ class User: # model the class after the user table from the database
             is_valid = False
         return is_valid
 
-
-
     @classmethod
     def get_all(cls):
         query = "SELECT * FROM user;"
@@ -151,3 +149,6 @@ class User: # model the class after the user table from the database
     def update(cls, data ):
         query = "UPDATE user SET first_name = %(fname)s , last_name = %(lname)s  , email = %(email)s , updated_at=NOW() WHERE id=%(id)s"
         return connectToMySQL(cls.db).query_db( query, data )
+
+    def full_name(self):
+        return f"{self.first_name} {self.last_name}"
