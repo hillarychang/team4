@@ -37,7 +37,7 @@ def create_travelinfo():
     
     car_data = {
             "company" : request.form["company"],
-            "trips_id": id,
+            "trips_id": trip_id,
             "total_days" : request.form["total_days"],
             "cost" : request.form["cost"],
             "start_date" : request.form["start_date"],
@@ -49,7 +49,7 @@ def create_travelinfo():
     hotel_data = {
             "name" : request.form["name"],
             "cost": request.form['cost'],
-            "trips_id": id,
+            "trips_id": trip_id,
             "check_in" : request.form["check_in"],
             "check_out" : request.form["check_out"]    
     }
@@ -149,12 +149,48 @@ def update_post(id):
     if not Travelinfo.validate_log(request.form): #request.form  (check user.py)
         return redirect('/update/<int:id>')
 
-    data = {
-        'id':id,
-        "text" : request.form["text"],
+    data = { "id" : id,
+            "text" : request.form["text"],
+            "user_id": session['user_id']
+    
     }
 
-    Travelinfo.update(data)
+    trip_id = Travelinfo.update(data)
+
+    flight_data = {
+            "id" : request.form["flight_id"],
+            "destination" : request.form["destination"],
+            "trips_id": trip_id,
+            "departure" : request.form["departure"],
+            "arrival" : request.form["arrival"],
+            "flight_number" : request.form["flight_number"]
+
+    }
+
+    flight_id = Travelinfo.updateFlight(flight_data)
+    
+    car_data = {
+        "id" : request.form["car_id"],
+            "company" : request.form["company"],
+            "trips_id": trip_id,
+            "total_days" : request.form["total_days"],
+            "cost" : request.form["cost"],
+            "start_date" : request.form["start_date"],
+            "end_date" : request.form["end_date"]
+    
+    }
+    car_id = Travelinfo.updateCar(car_data)
+
+    hotel_data = {
+            "id" : request.form["hotel_id"],
+            "name" : request.form["name"],
+            "cost": request.form['cost'],
+            "trips_id": trip_id,
+            "check_in" : request.form["check_in"],
+            "check_out" : request.form["check_out"]    
+    }
+
+    hotel_id = Travelinfo.updateHotel(hotel_data)
     return redirect('/showUser')
 
 
@@ -162,10 +198,11 @@ def update_post(id):
 def edit_post(id):
 
     data = {'id':id}
-    trips = Travelinfo.get_one(data)
+    trips = Travelinfo.get_travelinfo_with_allinfo(data)
+    # allinfo = Travelinfo.get_travelinfo_with_allinfo(data)
     user = User.get_user_with_logs({'id':trips.user_id}) #returns a user with a list of logs
 
-    return render_template("edit_travelinfo.html", travelinfo = trips, users  = user)
+    return render_template("edit_travelinfo.html", trips = trips, users  = user)
 
 
 
