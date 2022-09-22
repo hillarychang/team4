@@ -32,14 +32,72 @@
     </div>
 
 
-
     <div class="content">
-        <form action="/update/{{travelinfo.id}}" method="POST">
+
+        <form action="/update/{{trips.id}}" method="POST">
             <label for="text">Text:</label><br>
-            <input type="text" name="text"> <br>               
+            <input type="text" name="text" value="{{ trips.text }}"> <br>    
+            
+            <h3>Hotels</h3> 
+            <!-- ^added -->
+            
+            <input type="hidden" name="hotel_id" value="{{ trips.all_info['hotels_id'] }}">
+
+            <label for="name">Hotel Name:</label><br>
+            <input type="text" name="name" value="{{ trips.all_info['name'] }}"> <br>   
+            
+            <label for="cost">Cost:</label><br>
+            <input type="number" name="cost" value="{{ trips.all_info['cost'] }}"> <br>   
+            
+            <label for="check_in">Start Date:</label><br>
+            <input type="date" id="check_in" name="check_in" value="{{ trips.all_info['check_in'] }}"><br>
+            
+            <label for="check_out">End Date:</label><br>
+            <input type="date" id="check_out" name="check_out" value="{{ trips.all_info['check_out'] }}"><br>
+            
+            
+            
+            <h3>Flights</h3> 
+            <!-- ^added -->
+            <input type="hidden" name="flight_id" value="{{ trips.all_info['flights_id'] }}">
+
+            <label for="destination">Destination:</label><br>
+            <input type="text" name="destination" value="{{ trips.all_info['destination'] }}"> <br>   
+            
+            <label for="departure">Departure Date:</label><br>
+            <input type="date" id="departure" name="departure" value="{{ trips.all_info['departure'] }}"><br>
+            
+            <label for="arrival">Arrival Date:</label><br>
+            <input type="date" id="arrival" name="arrival" value="{{ trips.all_info['arrival'] }}"><br>
+            
+            <label for="flight_number">Flight Number:</label><br>
+            <input type="number" name="flight_number" value="{{ trips.all_info['flight_number'] }}"> <br>   
+            
+            
+            <h3>Cars</h3> 
+            <!-- ^added -->
+            <input type="hidden" name="car_id" value="{{ trips.all_info['cars_id'] }}">
+            
+            <label for="company">Car Company:</label><br>
+            <input type="text" name="company" value="{{ trips.all_info['company'] }}"> <br> 
+            
+            <label for="total_days">Total days:</label><br>
+            <input type="number" name="total_days" value="{{ trips.all_info['total_days'] }}"> <br>   
+            
+            <label for="cost">Cost:</label><br>
+            <input type="number" name="cost" value="{{ trips.all_info['cars_cost'] }}"> <br>   
+            
+            <label for="start_date">Start Date:</label><br>
+            <input type="date" id="start_date" name="start_date" value="{{ trips.all_info['start_date'] }}"><br>
+            
+            <label for="end_date">End Date:</label><br>
+            <input type="date" id="end_date" name="end_date" value="{{ trips.all_info['end_date'] }}"><br>
+            
             <button type="submit">Update</button>
+            
         </form> 
     </div>
+
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-A3rJD856KowSb7dwlZdYEkO39Gagi7vIsF0jrRAoQmDKKtQBHUuLZ9AsSv4jD4Xa" crossorigin="anonymous"></script>
 </body>

@@ -22,61 +22,65 @@ class Travelinfo: # model the class after the user table from  database
         self.updated_at = data['updated_at']
         self.user_id = data['user_id']  # hidden input 
 
+        
+
         self.hotel = []
 
-        self.all_info = [] #can delete if don't use
+        self.all_info = {} #can delete if don't use
 
-
-    # # METHOD 2: 
-    # @classmethod
-    # def get_travelinfo_with_allinfo( cls , data ):
-
-    #     print("id__",data)
-
-    #     query = """
-    #     SELECT * FROM trips 
-    #     LEFT JOIN hotels ON hotels.trips_id = trips.id 
-    #     LEFT JOIN cars ON cars.trips_id = trips.id 
-    #     LEFT JOIN flights ON flights.trips_id = trips.id 
-    #     WHERE trips.id = %(id)s
-    #     """
-
-    #     results = connectToMySQL(cls.db).query_db(query, data) #results returns a list of dictionaries (key is column, value is row in specific column)
-
-    #     travelinfo = cls( results[0] )
         
-    #     for row_from_db in results:
-    #         # Now parse the post data to make instances of posts and add them into the list.
-    #         join_data = {
-    #             "trips_id" : row_from_db["trips.id"],  
+
+
+    # METHOD 2: 
+    @classmethod
+    def get_travelinfo_with_allinfo( cls , data ):
+
+        print("id__",data)
+
+        query = """
+        SELECT * FROM trips 
+        LEFT JOIN hotels ON hotels.trips_id = trips.id 
+        LEFT JOIN cars ON cars.trips_id = trips.id 
+        LEFT JOIN flights ON flights.trips_id = trips.id 
+        WHERE trips.id = %(id)s
+        """
+
+        results = connectToMySQL(cls.db).query_db(query, data) #results returns a list of dictionaries (key is column, value is row in specific column)
+
+        travelinfo = cls( results[0] )
+        
+        for row_from_db in results:
+            # Now parse the post data to make instances of posts and add them into the list.
+            join_data = {
+                "trips_id" : row_from_db["id"],  
             
-    #         #hotel info
-    #             "hotels_id" : row_from_db["hotels.id"],  #hotels.__ because id overlaps with id in other tables
-    #             "cost" : row_from_db["hotels.cost"],
-    #             "check_in" : row_from_db['check_in'],
-    #             "check_out" : row_from_db['check_out'],
-    #             "name" : row_from_db['name'],
+            #hotel info
+                "hotels_id" : row_from_db["hotels.id"],  #hotels.__ because id overlaps with id in other tables
+                "cost" : row_from_db["cost"],
+                "check_in" : row_from_db['check_in'],
+                "check_out" : row_from_db['check_out'],
+                "name" : row_from_db['name'],
 
-    #         #car info
-    #             "cars_id" : row_from_db["cars.id"],  #hotels.__ because id overlaps with id in other tables
-    #             "company" : row_from_db["company"],
-    #             "total_days" : row_from_db['total_days'],
-    #             "cars_cost" : row_from_db['cars.cost'],
-    #             "start_date" : row_from_db['start_date'],
-    #             "end_date" : row_from_db['end_date'],
+            #car info
+                "cars_id" : row_from_db["cars.id"],  #hotels.__ because id overlaps with id in other tables
+                "company" : row_from_db["company"],
+                "total_days" : row_from_db['total_days'],
+                "cars_cost" : row_from_db['cars.cost'],
+                "start_date" : row_from_db['start_date'],
+                "end_date" : row_from_db['end_date'],
 
-    #         # flight info
-    #             "flights_id" : row_from_db["flights.id"],  #hotels.__ because id overlaps with id in other tables
-    #             "flight_number" : row_from_db["flight_number"],
-    #             "destination" : row_from_db['destination'],
-    #             "departure" : row_from_db['departure'],
-    #             "arrival" : row_from_db['arrival'],
+            # flight info
+                "flights_id" : row_from_db["flights.id"],  #hotels.__ because id overlaps with id in other tables
+                "flight_number" : row_from_db["flight_number"],
+                "destination" : row_from_db['destination'],
+                "departure" : row_from_db['departure'],
+                "arrival" : row_from_db['arrival'],
 
                 
-    #         }
+            }
 
-    #         travelinfo.all_info.append( join_data ) #call hotel class, then call Hotel constructor
-    #     return travelinfo.all_info     #returns an object with a list of hotels inside 
+            travelinfo.all_info =  join_data  #call hotel class, then call Hotel constructor
+        return travelinfo     #returns an object with a list of hotels inside 
 
 
 
@@ -203,6 +207,27 @@ class Travelinfo: # model the class after the user table from  database
         return cls(results[0])   
 
 
+    @classmethod
+    def get_oneHotel(cls, data):
+        query = "SELECT * FROM hotels WHERE id = %(id)s ;" #%(id)s is the key of the dictionary data and returns id
+        results = connectToMySQL(cls.db).query_db(query, data) #query_db returns list of objects
+        return cls(results[0])   
+
+
+    @classmethod
+    def get_oneFlight(cls, data):
+        query = "SELECT * FROM flights WHERE id = %(id)s ;" #%(id)s is the key of the dictionary data and returns id
+        results = connectToMySQL(cls.db).query_db(query, data) #query_db returns list of objects
+        return cls(results[0])   
+
+
+    @classmethod
+    def get_oneCar(cls, data):
+        query = "SELECT * FROM cars WHERE id = %(id)s ;" #%(id)s is the key of the dictionary data and returns id
+        results = connectToMySQL(cls.db).query_db(query, data) #query_db returns list of objects
+        return cls(results[0])   
+
+
     @classmethod     # if logged in as user, can delete log
     def delete(cls, data ):
         query = "DELETE FROM trips WHERE id=%(id)s;"
@@ -211,6 +236,22 @@ class Travelinfo: # model the class after the user table from  database
     @classmethod     # class method to edit one log in the database
     def update(cls, data ):
         query = "UPDATE trips SET text = %(text)s, created_at =NOW(), updated_at=NOW() WHERE id=%(id)s"
+        return connectToMySQL(cls.db).query_db( query, data )
+
+
+    @classmethod     # class method to edit one log in the database
+    def updateHotel(cls, data ):
+        query = "UPDATE hotels SET name = %(name)s, check_in = %(check_in)s, check_out = %(check_out)s, cost = %(cost)s  WHERE id=%(id)s"
+        return connectToMySQL(cls.db).query_db( query, data )
+
+    @classmethod     # class method to edit one log in the database
+    def updateFlight(cls, data ):
+        query = "UPDATE flights SET flight_number = %(flight_number)s, destination = %(destination)s, departure = %(departure)s, arrival = %(arrival)s  WHERE id=%(id)s"
+        return connectToMySQL(cls.db).query_db( query, data )
+
+    @classmethod     # class method to edit one log in the database
+    def updateCar(cls, data ):
+        query = "UPDATE cars SET company = %(company)s, total_days = %(total_days)s, cost = %(cost)s, start_date = %(start_date)s, end_date = %(end_date)s  WHERE id=%(id)s"
         return connectToMySQL(cls.db).query_db( query, data )
 
 
